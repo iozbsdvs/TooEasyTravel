@@ -1,5 +1,5 @@
 from telebot.types import Message
-from TelegramBot import bot
+from loader import bot
 
 
 @bot.message_handler(commands=['start'])

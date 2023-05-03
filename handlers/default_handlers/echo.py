@@ -1,4 +1,4 @@
-from TelegramBot import bot
+from loader import bot
 from telebot.types import Message
 
 
