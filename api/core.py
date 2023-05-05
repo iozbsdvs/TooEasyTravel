@@ -6,7 +6,7 @@ url = "https://hotels4.p.rapidapi.com/locations/v3/search"
 querystring = {"q": "new york", "locale": "en_US", "langid": "1033", "siteid": "300000001"}
 
 headers = {
-    "X-RapidAPI-Key": config.API_KEY,
+    "X-RapidAPI-Key": config.RAPID_API_KEY,
     "X-RapidAPI-Host": "hotels4.p.rapidapi.com"
 }
 
