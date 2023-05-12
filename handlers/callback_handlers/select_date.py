@@ -1,16 +1,24 @@
 from loader import bot
-import datetime
+from utils import find_hotels
 from states.user_states import LowPriceInputState
 from keyboards.calendar.calendar import CallbackData, Calendar
 from handlers import search_handlers
 from telebot.types import CallbackQuery
-
+import datetime
 calendar = Calendar()
 calendar_callback = CallbackData("calendar", "action", "year", "month", "day")
 
 
 @bot.callback_query_handler(func=lambda call: call.data.startswith(calendar_callback.prefix))
 def input_date(call: CallbackQuery) -> None:
+    """
+    Функция обрабатывает выбор пользователем даты заезда и выезда в календаре.
+
+    :param call: Объект CallbackQuery, содержащий информацию о нажатии кнопки календаря.
+    :type call: CallbackQuery
+
+    :return: None
+    """
     name, action, year, month, day = call.data.split(calendar_callback.sep)
     calendar.calendar_query_handler(
         bot=bot, call=call, name=name, action=action, year=year, month=month, day=day
@@ -30,7 +38,7 @@ def input_date(call: CallbackQuery) -> None:
                 checkin = int(data['checkInDate']['year'] + data['checkInDate']['month'] + data['checkInDate']['day'])
                 if int(select_date) > checkin:
                     data['checkOutDate'] = {'day': day, 'month': month, 'year': year}
-
+                    find_hotels.find_and_show_hotels(call.message, data)
                 else:
                     bot.send_message(call.message.chat.id, 'Дата выезда должна быть больше даты заезда! '
                                                            'Повторите выбор даты!')
@@ -44,7 +52,6 @@ def input_date(call: CallbackQuery) -> None:
                     bot.send_message(call.message.chat.id, 'Дата заезда должна быть больше или равна сегодняшней дате!'
                                                            'Повторите выбор даты!')
                     search_handlers.lowprice.calendar(call.message, 'заезда')
-
 
 
 def check_month_day(number: str) -> str:

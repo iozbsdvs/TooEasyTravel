@@ -4,6 +4,11 @@ from loader import bot
 
 
 @bot.message_handler(commands=['help'])
-def bot_help(message: Message):
+def bot_help(message: Message) -> None:
+    """
+    Отправляет список доступных команд бота.
+
+    :param message: объект сообщения от пользователя
+    """
     text = [f'/{command} - {desk}' for command, desk in DEFAULT_COMMANDS]
     bot.reply_to(message, '\n'.join(text))

@@ -6,6 +6,12 @@ from handlers.search_handlers.lowprice import calendar
 
 @bot.callback_query_handler(func=lambda call: call.data.isalpha())
 def need_photo_call(call: CallbackQuery) -> None:
+    """
+    Функция обрабатывает ответ пользователя на вопрос, нужно ли выводить фотографии отелей.
+
+    :param call: объект типа CallbackQuery, содержащий информацию о нажатии пользователем кнопки в чате Telegram.
+    :return: None
+    """
     if call.data == 'yes':
         with bot.retrieve_data(call.message.chat.id) as data:
             data["photo_need"] = call.data

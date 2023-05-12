@@ -22,7 +22,7 @@ def get_hotels(response_text: str) -> Dict:
     data = json.loads(response_text)
     if not data:
         raise LookupError('Запрос пуст..')
-    # При поиске в некоторых городах выдается ошибка, чтобы ее исключить - эта проверка:
+    # Проверка на возможные ошибки:
     if 'errors' in data.keys():
         return {'error': data['errors'][0]['message']}
 
@@ -37,5 +37,5 @@ def get_hotels(response_text: str) -> Dict:
             }
         except (KeyError, TypeError):
             continue
-
+    print(hotels_data)
     return hotels_data
