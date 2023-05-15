@@ -1,6 +1,6 @@
 from loader import bot
 from telebot.types import CallbackQuery
-from states.user_states import LowPriceInputState
+from states.user_states import UserInputState
 from handlers.search_handlers.lowprice import calendar
 
 
@@ -16,7 +16,7 @@ def need_photo_call(call: CallbackQuery) -> None:
         with bot.retrieve_data(call.message.chat.id) as data:
             data["photo_need"] = call.data
         bot.delete_message(call.message.chat.id, call.message.message_id)
-        bot.set_state(call.message.chat.id, LowPriceInputState.photo_count)
+        bot.set_state(call.message.chat.id, UserInputState.photo_count)
         bot.send_message(call.message.chat.id, 'Сколько вывести фотографий? От 1 до 10!')
     elif call.data == 'no':
         with bot.retrieve_data(call.message.chat.id) as data:

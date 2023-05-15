@@ -8,10 +8,10 @@ from keyboards.calendar.calendar import Calendar
 # from utils.print_data import print_data
 
 
-@bot.message_handler(commands=["lowprice"])
+@bot.message_handler(commands=["highprice"])
 def low_high_handler(message: Message) -> None:
     """
-    Обработчик команды "/lowprice". Сохраняет необходимые данные в состояние бота и
+    Обработчик команды "/highprice". Сохраняет необходимые данные в состояние бота и
     запрашивает у пользователя ввод города для поиска отелей.
 
     :param message: Объект сообщения, полученного от пользователя.
@@ -22,7 +22,7 @@ def low_high_handler(message: Message) -> None:
     with bot.retrieve_data(message.chat.id) as data:
         data.clear()
         data["command"] = message.text
-        data["sort"] = 'PRICE_LOW_TO_HIGH'
+        data["sort"] = 'PRICE_HIGH_TO_LOW'
         data["filters"] = {'availableFilter': 'SHOW_AVAILABLE_ONLY'}
         data['date_time'] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
         data["chat_id"] = message.chat.id

@@ -1,6 +1,6 @@
 from loader import bot
 from utils import find_hotels
-from states.user_states import LowPriceInputState
+from states.user_states import UserInputState
 from keyboards.calendar.calendar import CallbackData, Calendar
 from handlers import search_handlers
 from telebot.types import CallbackQuery
@@ -32,7 +32,7 @@ def input_date(call: CallbackQuery) -> None:
         now_year, now_month, now_day = datetime.datetime.now().strftime('%Y.%m.%d').split('.')
         now = now_year + now_month + now_day
 
-        bot.set_state(call.message.chat.id, LowPriceInputState.input_date)
+        bot.set_state(call.message.chat.id, UserInputState.input_date)
         with bot.retrieve_data(call.message.chat.id) as data:
             if 'checkInDate' in data:
                 checkin = int(data['checkInDate']['year'] + data['checkInDate']['month'] + data['checkInDate']['day'])

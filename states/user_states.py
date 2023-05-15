@@ -1,7 +1,7 @@
 from telebot.handler_backends import State, StatesGroup
 
 
-class LowPriceInputState(StatesGroup):
+class UserInputState(StatesGroup):
     """
     Класс, описывающий состояния пользователя в ходе ввода параметров для поиска самых дешевых отелей.
 
