@@ -1,5 +1,8 @@
 import os
 from dotenv import load_dotenv, find_dotenv
+from peewee import SqliteDatabase
+
+db = SqliteDatabase('database/history.sqlite3')
 
 if not find_dotenv():
     exit('Переменные окружения не загружены т.к отсутствует файл .env')

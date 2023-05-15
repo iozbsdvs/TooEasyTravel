@@ -1,8 +1,6 @@
 from datetime import datetime
 from peewee import *
-
-db = SqliteDatabase('database/history.sqlite3')
-
+from config_data.config import db
 
 class User(Model):
     """
@@ -31,7 +29,6 @@ class User(Model):
 
 
 class Query(Model):
-
     """
     Модель запроса, содержащая информацию о запросах пользователей.
 

@@ -3,11 +3,9 @@ from telebot.types import Message
 import datetime
 from states.user_states import LowPriceInputState
 import keyboards.inline
-from api import core
+import api
 from keyboards.calendar.calendar import Calendar
 # from utils.print_data import print_data
-from handlers.search_handlers import request_processing
-from utils import find_hotels
 
 
 @bot.message_handler(commands=["lowprice"])
@@ -49,9 +47,9 @@ def input_city(message: Message) -> None:
         data['input_city'] = message.text
         url = "https://hotels4.p.rapidapi.com/locations/v3/search"
         querystring = {"q": message.text, "locale": "ru_RU"}
-        response_cities = core.request('GET', url, querystring)
+        response_cities = api.core.request('GET', url, querystring)
         if response_cities.status_code == 200:
-            possible_cities = request_processing.get_cities.get_cities(response_cities.text)
+            possible_cities = api.request_processing.get_cities.get_cities(response_cities.text)
             keyboards.inline.city_buttons.show_cities_buttons(message, possible_cities)
         else:
             bot.send_message(message.chat.id, f"Что-то пошло не так, код ошибки: {response_cities.status_code}")

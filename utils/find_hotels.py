@@ -1,6 +1,5 @@
 from loader import bot
 from telebot.types import Message, Dict, InputMediaPhoto
-from handlers.search_handlers import request_processing
 import random
 import api.core
 
@@ -57,7 +56,7 @@ def find_and_show_hotels(message: Message, data: Dict) -> None:
     response_hotels = api.core.request('POST', url, payload)
 
     if response_hotels.status_code == 200:
-        hotels = request_processing.get_hotels.get_hotels(response_hotels.text)
+        hotels = api.request_processing.get_hotels.get_hotels(response_hotels.text)
 
         if 'error' in hotels:
             bot.send_message(message.chat.id, hotels['error'])
@@ -81,7 +80,7 @@ def find_and_show_hotels(message: Message, data: Dict) -> None:
                 get_summary = api.core.request('POST', summary_url, summary_payload)
 
                 if get_summary.status_code == 200:
-                    summary_info = request_processing.get_summary.get_summary(get_summary.text)
+                    summary_info = api.request_processing.get_summary.get_summary(get_summary.text)
 
                     caption = f'Название: {hotel["name"]}\n ' \
                               f'Адрес: {summary_info["address"]}\n' \
