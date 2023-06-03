@@ -2,7 +2,13 @@ from datetime import datetime
 from peewee import *
 from config_data.config import db
 
-class User(Model):
+
+class BaseModel(Model):
+    class Meta:
+        database = db
+
+
+class User(BaseModel):
     """
        Модель, представляющая пользователя Telegram.
 
@@ -21,14 +27,39 @@ class User(Model):
        """
 
     chat_id = IntegerField(unique=True)
-    username = CharField()
+    username = CharField(null=True)
     full_name = CharField(null=True)
 
-    class Meta:
-        database = db
+
+class Response(BaseModel):
+    """
+       Модель, представляющая отель, возвращенный в результате запроса.
+
+       :param hotel_id: уникальный идентификатор отеля, связанный с ответом
+       :type hotel_id: str
+       :param name: название отеля
+       :type name: str
+       :param address: адрес отеля
+       :type address: str
+       :param price: цена за проживание в отеле
+       :type price: float
+       :param distance: расстояние от отеля до центра города
+       :type distance: float
+       """
+
+    hotel_id = CharField(unique=True)
+    name = CharField()
+    address = CharField()
+    price = FloatField()
+    distance = FloatField()
 
 
-class Query(Model):
+class Image(BaseModel):
+    response = ForeignKeyField(Response, backref='images')
+    link = CharField()
+
+
+class Query(BaseModel):
     """
     Модель запроса, содержащая информацию о запросах пользователей.
 
@@ -52,49 +83,15 @@ class Query(Model):
     """
 
     user = ForeignKeyField(User, backref='queries')
-    date_time = DateTimeField(default=datetime.now)
+    date_time = CharField(default=datetime.now)
     input_city = CharField()
     destination_id = CharField()
     photo_need = BooleanField(default=False)
-    response = ForeignKeyField('Response', backref='queries', null=True, on_delete='CASCADE')
-
-    class Meta:
-        database = db
+    response = ForeignKeyField(Response, backref='queries', null=True, on_delete='CASCADE')
 
 
-class Response(Model):
-    """
-       Модель, представляющая отель, возвращенный в результате запроса.
-
-       :param hotel_id: уникальный идентификатор отеля, связанный с ответом
-       :type hotel_id: str
-       :param name: название отеля
-       :type name: str
-       :param address: адрес отеля
-       :type address: str
-       :param price: цена за проживание в отеле
-       :type price: float
-       :param distance: расстояние от отеля до центра города
-       :type distance: float
-       """
-
-    hotel_id = CharField(primary_key=True)
-    name = CharField()
-    address = CharField()
-    price = FloatField()
-    distance = FloatField()
-
-    class Meta:
-        database = db
-
-
-class Image(Model):
-    response = ForeignKeyField(Response, backref='images')
-    link = CharField()
-
-    class Meta:
-        database = db
-
+db.connect()
+db.create_tables([User, Response, Image, Query])
 
 def add_user(chat_id: int, username: str, full_name: str) -> None:
     user, created = User.get_or_create(chat_id=chat_id, defaults={'username': username, 'full_name': full_name})
@@ -110,28 +107,26 @@ def add_query(query_data: dict) -> None:
                          input_city=query_data['input_city'],
                          destination_id=query_data['destination_id'],
                          photo_need=query_data['photo_need'])
-    query.save()
     print('Добавлен в БД новый запрос.')
-    # Нам не нужно очень много записей историй поиска, поэтому для каждого пользователя
-    # будем хранить только 5 последних записей, лишние - удалим.
+
+    # Оставляем только последние 5 записей для каждого пользователя
     if user.queries.count() > 5:
         oldest_query = user.queries.order_by(Query.date_time).first()
         oldest_query.delete_instance()
 
 
 def add_response(search_result: dict) -> None:
-    response_list = []
     for item in search_result.items():
         response = Response.create(hotel_id=item[0],
                                    name=item[1]['name'],
                                    address=item[1]['address'],
                                    price=item[1]['price'],
                                    distance=item[1]['distance'])
-        response_list.append(response)
         for link in item[1]['images']:
             image = Image.create(response=response, link=link)
-            image.save()
-        print('Добавлены в БД ссылки на фотографии отеля.')
-    Query.update(response=response_list[-1]).where(
-        Query.date_time == search_result[response_list[-1].hotel_id]['date_time']).execute()
-    print('Добавлены в БД данные отеля.')
+        print('Добавлены в БД данные отеля и ссылки на фотографии.')
+
+    # Обновляем последний запрос данными ответа
+    query = Query.select().order_by(Query.date_time.desc()).get()
+    query.response = response
+    query.save()
