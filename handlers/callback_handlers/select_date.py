@@ -1,7 +1,6 @@
 from loader import bot
-from utils import find_hotels
 from utils.info import print_info
-from states.user_states import UserInputState, UserInputStateAdvanced
+from states.user_states import get_state_class_based_on_sort, UserInputStateAdvanced
 from keyboards.calendar.calendar import CallbackData, Calendar
 from handlers import search_handlers
 from telebot.types import CallbackQuery
@@ -34,22 +33,22 @@ def input_date(call: CallbackQuery) -> None:
         now_year, now_month, now_day = datetime.datetime.now().strftime('%Y.%m.%d').split('.')
         now = now_year + now_month + now_day
 
-        bot.set_state(call.message.chat.id, UserInputState.input_date)
         with bot.retrieve_data(call.message.chat.id) as data:
+            StateClass = get_state_class_based_on_sort(data)
+            bot.set_state(call.message.chat.id, StateClass.input_date)
+
             if 'checkInDate' in data:
                 checkin = int(data['checkInDate']['year'] + data['checkInDate']['month'] + data['checkInDate']['day'])
                 if int(select_date) > checkin:
                     data['checkOutDate'] = {'day': day, 'month': month, 'year': year}
 
-                    data['landmark_in'] = 0
-                    data['landmark_out'] = 0
                     if data['sort'] == 'DISTANCE':
-                        bot.set_state(call.message.chat.id, UserInputState.landmarkIn)
+                        bot.set_state(call.message.chat.id, UserInputStateAdvanced.landmarkIn)
                         bot.send_message(call.message.chat.id, 'Введите начало диапазона расстояния от центра '
                                                                '(от 0 миль).')
+                        print(data)
                     else:
                         print_info(call.message, data)
-                    find_hotels.find_and_show_hotels(call.message, data)
                 else:
                     bot.send_message(call.message.chat.id, 'Дата выезда должна быть больше даты заезда! '
                                                            'Повторите выбор даты!')

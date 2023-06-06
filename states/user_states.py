@@ -25,10 +25,6 @@ class UserInputState(StatesGroup):
     quantity_hotels = State()
     photo_count = State()
     input_date = State()
-    priceMin = State()
-    priceMax = State()
-    landmarkIn = State()
-    landmarkOut = State()
     history_select = State()
 
 
@@ -54,16 +50,13 @@ class UserInputStateAdvanced(StatesGroup):
     destinationId = State()
     quantity_hotels = State()
     photo_count = State()
-    input_date = State()
     priceMin = State()
     priceMax = State()
+    input_date = State()
     landmarkIn = State()
     landmarkOut = State()
     history_select = State()
 
 
-def set_state_based_on_sort(data, chat_id, state):
-    if data['sort'] == 'DISTANCE':
-        bot.set_state(chat_id, getattr(UserInputStateAdvanced, state))
-    else:
-        bot.set_state(chat_id, getattr(UserInputState, state))
+def get_state_class_based_on_sort(data):
+    return UserInputStateAdvanced if data['sort'] == 'DISTANCE' else UserInputState

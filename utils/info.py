@@ -19,7 +19,7 @@ def print_info(message: Message, data: Dict) -> None:
                     f'Дата и время запроса: {data["date_time"]}\n'
                     f'Введена команда: {data["command"]}\n'
                     f'Вы ввели город: {data["input_city"]}\n'
-                    f'Выбран город с id: {data["destination_id"]}\n'
+                    f'Выбран город с id: {data["destinationId"]}\n'
                     f'Количество отелей: {data["quantity_hotels"]}\n'
                     f'Нужны ли фотографии? {data["photo_need"]}\n'
                     f'Количество фотографий: {data["photo_count"]}\n'

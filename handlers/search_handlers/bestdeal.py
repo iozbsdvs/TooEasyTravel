@@ -1,7 +1,7 @@
 from loader import bot
 from telebot.types import Message
 from keyboards.calendar.calendar import Calendar
-from states.user_states import UserInputState, UserInputStateAdvanced
+from states.user_states import UserInputStateAdvanced
 from utils.info import print_info
 import keyboards.inline
 import api
@@ -91,6 +91,7 @@ def input_price_min(message: Message) -> None:
     : param message : Message
     : return : None
     """
+    print('3')
     if message.text.isdigit():
         with bot.retrieve_data(message.chat.id) as data:
             data['price_min'] = message.text
@@ -108,6 +109,7 @@ def input_price_max(message: Message) -> None:
     : param message : Message
     : return : None
     """
+    print('3')
     if message.text.isdigit():
         with bot.retrieve_data(message.chat.id) as data:
             if int(data['price_min']) < int(message.text):
@@ -134,6 +136,7 @@ def input_quantity_photo(message: Message) -> None:
     :type message: telebot.types.Message
     :return: None
     """
+    print('3')
     if message.text.isdigit():
         if 0 < int(message.text) <= 10:
             with bot.retrieve_data(message.chat.id) as data:
@@ -152,6 +155,7 @@ def input_landmark_in(message: Message) -> None:
     : param message : Message
     : return : None
     """
+    print('3')
     if message.text.isdigit():
         with bot.retrieve_data(message.chat.id) as data:
             data['landmark_in'] = message.text

@@ -102,12 +102,12 @@ def add_user(chat_id: int, username: str, full_name: str) -> None:
 
 
 def add_query(query_data: dict) -> None:
-    user = User.get(User.chat_id == query_data['chat_id'])
+    user, created = User.get_or_create(chat_id=query_data['chat_id'])
     query = Query.create(user=user,
                          input_city=query_data['input_city'],
-                         destination_id=query_data['destination_id'],
+                         destination_id=query_data['destinationId'],
                          photo_need=query_data['photo_need'])
-    print('Добавлен в БД новый запрос.')
+    print('Новый запрос добавлен в БД.')
 
     # Оставляем только последние 5 записей для каждого пользователя
     if user.queries.count() > 5:
