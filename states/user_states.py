@@ -1,5 +1,4 @@
 from telebot.handler_backends import State, StatesGroup
-from loader import bot
 
 
 class UserInputState(StatesGroup):
@@ -12,10 +11,6 @@ class UserInputState(StatesGroup):
     :param quantity_hotels: количество отелей, которое нужно пользователю
     :param photo_count: количество фотографий
     :param input_date: дата заезда/выезда
-    :param priceMin: минимальная стоимость отеля
-    :param priceMax: максимальная стоимость отеля
-    :param landmarkIn: начало диапазона расстояния от центра
-    :param landmarkOut:  конец диапазона расстояния от центра
     :param history_select: выбор истории поиска
     """
     command = State()

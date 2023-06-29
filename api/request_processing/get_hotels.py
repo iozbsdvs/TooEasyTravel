@@ -37,5 +37,4 @@ def get_hotels(response_text: str) -> Dict:
             }
         except (KeyError, TypeError):
             continue
-    print(hotels_data)
     return hotels_data

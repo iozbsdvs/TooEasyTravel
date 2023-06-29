@@ -1,3 +1,4 @@
+from database.add_to_db import add_user
 from loader import bot
 from telebot.types import Message
 import datetime
@@ -7,8 +8,6 @@ import api
 from keyboards.calendar.calendar import Calendar
 from utils.info import print_info
 
-
-# from utils.print_data import print_data
 
 
 @bot.message_handler(commands=["highprice"])
@@ -30,9 +29,9 @@ def low_high_handler(message: Message) -> None:
         data['date_time'] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
         data["chat_id"] = message.chat.id
 
+    add_user(message.chat.id, message.from_user.username, message.from_user.full_name)
     bot.set_state(message.chat.id, UserInputState.input_city)
     bot.send_message(message.from_user.id, "Введите город для поиска отелей: ")
-    print('2')
 
 
 @bot.message_handler(state=UserInputState.input_city)
@@ -55,7 +54,7 @@ def input_city(message: Message) -> None:
         if response_cities.status_code == 200:
             possible_cities = api.request_processing.get_cities.get_cities(response_cities.text)
             keyboards.inline.city_buttons.show_cities_buttons(message, possible_cities)
-            print('2')
+
 
         else:
             bot.send_message(message.chat.id, f"Что-то пошло не так, код ошибки: {response_cities.status_code}")
@@ -80,7 +79,6 @@ def input_quantity_hotels(message: Message) -> None:
         if 0 < int(message.text) <= 25:
             with bot.retrieve_data(message.chat.id) as data:
                 data['quantity_hotels'] = message.text
-                print('2')
             keyboards.inline.photo_need.show_photo_need_buttons(message)
         else:
             bot.send_message(message.chat.id, 'Ошибка! Введите число от 1 до 25!')

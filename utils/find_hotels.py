@@ -1,3 +1,4 @@
+from database.add_to_db import add_response
 from loader import bot
 from telebot.types import Message, Dict, InputMediaPhoto
 import random
@@ -98,6 +99,11 @@ def find_and_show_hotels(message: Message, data: Dict) -> None:
                     except IndexError:
                         continue
 
+                    data_to_db = {hotel['id']: {'name': hotel['name'], 'address': summary_info['address'],
+                                                'price': hotel['price'], 'distance': round(hotel["distance"], 2),
+                                                'date_time': data['date_time'], 'images': links_to_images}}
+                    add_response(data_to_db)
+
                     # Если количество фотографий > 0: создаем медиа группу с фотками и выводим ее в чат
                     if int(data['photo_count']) > 0:
                         # формируем MediaGroup с фотографиями и описанием отеля и посылаем в чат
@@ -112,7 +118,6 @@ def find_and_show_hotels(message: Message, data: Dict) -> None:
                     else:
                         # если фотки не нужны, то просто выводим данные об отеле
                         bot.send_message(message.chat.id, caption)
-                        print(caption)
                 else:
                     bot.send_message(message.chat.id, f'Что-то пошло не так, код ошибки: {get_summary.status_code}')
             else:

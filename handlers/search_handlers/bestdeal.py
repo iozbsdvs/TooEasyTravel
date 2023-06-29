@@ -1,3 +1,4 @@
+from database.add_to_db import add_user
 from loader import bot
 from telebot.types import Message
 from keyboards.calendar.calendar import Calendar
@@ -26,9 +27,9 @@ def low_high_handler(message: Message) -> None:
         data['date_time'] = datetime.datetime.now().strftime('%d.%m.%Y %H:%M:%S')
         data["chat_id"] = message.chat.id
 
+        add_user(message.chat.id, message.from_user.username, message.from_user.full_name)
         bot.set_state(message.chat.id, UserInputStateAdvanced.input_city_best)
         bot.send_message(message.from_user.id, "Введите город для поиска отелей: ")
-        print('3')
 
 
 @bot.message_handler(state=UserInputStateAdvanced.input_city_best)
@@ -51,7 +52,6 @@ def input_city(message: Message) -> None:
         if response_cities.status_code == 200:
             possible_cities = api.request_processing.get_cities.get_cities(response_cities.text)
             keyboards.inline.city_buttons.show_cities_buttons(message, possible_cities)
-            print('3')
         else:
             bot.send_message(message.chat.id, f"Что-то пошло не так, код ошибки: {response_cities.status_code}")
             bot.send_message(message.from_user.id, "Проверьте введённые данные и попробуйте еще раз!")
@@ -75,7 +75,6 @@ def input_quantity_hotels(message: Message) -> None:
         if 0 < int(message.text) <= 25:
             with bot.retrieve_data(message.chat.id) as data:
                 data['quantity_hotels'] = message.text
-                print('3')
             bot.set_state(message.chat.id, UserInputStateAdvanced.priceMin)
             bot.send_message(message.chat.id, 'Введите минимальную стоимость отеля в долларах США:')
         else:
@@ -91,7 +90,6 @@ def input_price_min(message: Message) -> None:
     : param message : Message
     : return : None
     """
-    print('3')
     if message.text.isdigit():
         with bot.retrieve_data(message.chat.id) as data:
             data['price_min'] = message.text
@@ -109,7 +107,6 @@ def input_price_max(message: Message) -> None:
     : param message : Message
     : return : None
     """
-    print('3')
     if message.text.isdigit():
         with bot.retrieve_data(message.chat.id) as data:
             if int(data['price_min']) < int(message.text):
@@ -136,7 +133,7 @@ def input_quantity_photo(message: Message) -> None:
     :type message: telebot.types.Message
     :return: None
     """
-    print('3')
+
     if message.text.isdigit():
         if 0 < int(message.text) <= 10:
             with bot.retrieve_data(message.chat.id) as data:
@@ -155,7 +152,7 @@ def input_landmark_in(message: Message) -> None:
     : param message : Message
     : return : None
     """
-    print('3')
+
     if message.text.isdigit():
         with bot.retrieve_data(message.chat.id) as data:
             data['landmark_in'] = message.text

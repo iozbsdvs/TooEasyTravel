@@ -1,7 +1,7 @@
+from database.add_to_db import add_query
 from loader import bot
 from telebot.types import Message, Dict
 from utils import find_hotels
-import database
 
 
 def print_info(message: Message, data: Dict) -> None:
@@ -13,7 +13,7 @@ def print_info(message: Message, data: Dict) -> None:
     : return : None
     """
     # Отправляем в базу данных собранные данные, а там уже выберу что нужно
-    database.add_to_bd.add_query(data)
+    add_query(data)
 
     text_message = ('Исходные данные:\n'
                     f'Дата и время запроса: {data["date_time"]}\n'
@@ -35,7 +35,4 @@ def print_info(message: Message, data: Dict) -> None:
                          f'Конец диапазона от центра: {data["landmark_out"]}')
     else:
         bot.send_message(message.chat.id, text_message)
-
-    print(data)
-    print('я тут')
     find_hotels.find_and_show_hotels(message, data)

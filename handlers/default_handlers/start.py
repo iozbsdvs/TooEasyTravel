@@ -11,4 +11,3 @@ def bot_start(message: Message) -> None:
     :param message: объект сообщения от пользователя
     """
     bot.reply_to(message, f"Привет, {message.from_user.full_name}!")
-

@@ -46,7 +46,6 @@ def input_date(call: CallbackQuery) -> None:
                         bot.set_state(call.message.chat.id, UserInputStateAdvanced.landmarkIn)
                         bot.send_message(call.message.chat.id, 'Введите начало диапазона расстояния от центра '
                                                                '(от 0 миль).')
-                        print(data)
                     else:
                         print_info(call.message, data)
                 else:
