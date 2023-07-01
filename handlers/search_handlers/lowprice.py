@@ -1,10 +1,10 @@
+import keyboards.inline
+import api
+import datetime
 from database.add_to_db import add_user
 from loader import bot
 from telebot.types import Message
-import datetime
 from states.user_states import UserInputState
-import keyboards.inline
-import api
 from keyboards.calendar.calendar import Calendar
 
 

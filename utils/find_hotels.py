@@ -1,8 +1,9 @@
+import random
+import api.core
 from database.add_to_db import add_response
 from loader import bot
 from telebot.types import Message, Dict, InputMediaPhoto
-import random
-import api.core
+
 
 
 def find_and_show_hotels(message: Message, data: Dict) -> None:

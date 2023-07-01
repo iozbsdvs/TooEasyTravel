@@ -1,12 +1,12 @@
+import keyboards.inline
+import api
+import datetime
 from database.add_to_db import add_user
 from loader import bot
 from telebot.types import Message
 from keyboards.calendar.calendar import Calendar
 from states.user_states import UserInputStateAdvanced
 from utils.info import print_info
-import keyboards.inline
-import api
-import datetime
 
 
 @bot.message_handler(commands=["bestdeal"])
