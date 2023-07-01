@@ -21,9 +21,9 @@
 ---
 ## Инструкция по развертыванию
 
-`python3 -m venv venv_name` - создание виртуального окружения.
-`source venv_name/bin/activate` - активация виртуального окружения.
-`pip install -r requirements.txt` - подключить все библиотеки проекта.
+- `python3 -m venv venv_name` - создание виртуального окружения.
+- `source venv_name/bin/activate` - активация виртуального окружения.
+- `pip install -r requirements.txt` - подключить все библиотеки проекта.
 
 ---
 ## Инструкция по запуску
